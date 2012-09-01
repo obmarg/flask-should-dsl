@@ -1,0 +1,6 @@
+language: python
+python:
+ - "2.6"
+ - "2.7"
+install: "pip install -r Requirements.txt -r Requirements-support.txt"
+script: "nosetests -i '^(it|ensure|must|should|specs?|examples?|deve|tests?)' --with-spec --spec-color"
