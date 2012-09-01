@@ -36,7 +36,9 @@ Usage
 
 To enable the flask-should-dsl matchers, simply import the module:
 
-    import flask.ext.should_dsl
+```python
+import flask.ext.should_dsl
+```
 
 ### Matchers
 
@@ -46,38 +48,44 @@ The following matchers are provided by flask-should-dsl:
 
 This checks the status of a response object
 
-    >>> resp.status_code = 200
-    >>> resp |should| have_status(200)
-    >>> resp |should| have_status(400)
-    Traceback (most recent call last):
-    ...
-    ShouldNotSatisfied: Expected the status code 400, but got 200
+```python
+>>> resp.status_code = 200
+>>> resp |should| have_status(200)
+>>> resp |should| have_status(400)
+Traceback (most recent call last):
+...
+ShouldNotSatisfied: Expected the status code 400, but got 200
+```
 
 ##### be_xxx
 
 These matchers (be_200, be_400, be_401, be_403, be_404, be_405, be_500) provide
 shortcuts to check the status of a response object.
 
-    >>> resp.status_code = 200
-    >>> resp |should| be_200
-    >>> resp |should_not| be_200
-    Traceback (most recent call last):
-    ...
-    ShouldNotSatisfied: Expected the status code not to be 200
+```python
+>>> resp.status_code = 200
+>>> resp |should| be_200
+>>> resp |should_not| be_200
+Traceback (most recent call last):
+...
+ShouldNotSatisfied: Expected the status code not to be 200
+```
 
 ##### be_redirect_to
 
 This matcher checks if a response object represents a redirect.
 
-    >>> response.status_code = 301
-    >>> response.location = 'http://localhost/redir'
-    >>> response |should| be_redirect_to('/redir')
-    >>> response.location = 'http://localhost/elsewhere'
-    >>> response |should| be_redirect_to('/redir')
-    Traceback (most recent call last):
-    ...
-    ShouldNotSatisfied: Expected a redirect to "http://localhost/redir" but got "http://localhost/elsewhere"
-    >>> response.status_code = 200
-    Traceback (most recent call last):
-    ...
-    ShouldNotSatisfied: Expected a redirect status, but got 200
+```python
+>>> response.status_code = 301
+>>> response.location = 'http://localhost/redir'
+>>> response |should| be_redirect_to('/redir')
+>>> response.location = 'http://localhost/elsewhere'
+>>> response |should| be_redirect_to('/redir')
+Traceback (most recent call last):
+...
+ShouldNotSatisfied: Expected a redirect to "http://localhost/redir" but got "http://localhost/elsewhere"
+>>> response.status_code = 200
+Traceback (most recent call last):
+...
+ShouldNotSatisfied: Expected a redirect status, but got 200
+```
