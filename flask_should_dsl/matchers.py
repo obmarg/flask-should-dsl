@@ -17,12 +17,12 @@ class GenericStatusChecker(object):
         return self._actual == self._expected
 
     def message_for_failed_should(self):
-        return 'Expected the status code {}, but got {}'.format(
+        return 'Expected the status code {0}, but got {1}'.format(
                 self._expected, self._actual
                 )
 
     def message_for_failed_should_not(self):
-        return 'Expected the status code not to be {}'.format(self._expected)
+        return 'Expected the status code not to be {0}'.format(self._expected)
 
 
 def make_status_checker(status):
@@ -32,7 +32,7 @@ def make_status_checker(status):
     :returns:       A class that will check for the status
     '''
     class Checker(object):
-        name = 'be_{}'.format(status)
+        name = 'be_{0}'.format(status)
 
         def __call__(self):
             return self
@@ -42,12 +42,12 @@ def make_status_checker(status):
             return self._actual == status
 
         def message_for_failed_should(self):
-            return 'Expected the status code {}, but got {}'.format(
+            return 'Expected the status code {0}, but got {1}'.format(
                     status, self._actual
                     )
 
         def message_for_failed_should_not(self):
-            return 'Expected the status code not to be {}'.format(status)
+            return 'Expected the status code not to be {0}'.format(status)
     return Checker
 
 
@@ -77,15 +77,15 @@ class RedirectMatcher(object):
 
     def message_for_failed_should(self):
         if self._status_ok:
-            return 'Expected a redirect to "{}" but got "{}"'.format(
+            return 'Expected a redirect to "{0}" but got "{1}"'.format(
                     self._expected, self._actual_location
                     )
         else:
-            return 'Expected a redirect status, but got {}'.format(
+            return 'Expected a redirect status, but got {0}'.format(
                     self._actual_status
                     )
 
     def message_for_failed_should_not(self):
-        return 'Did not expect a redirect to "{}"'.format(
+        return 'Did not expect a redirect to "{0}"'.format(
                 self._expected
                 )
