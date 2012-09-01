@@ -89,3 +89,21 @@ Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected a redirect status, but got 200
 ```
+
+##### have_json
+
+This matcher checks if a response object contains matching JSON.  
+
+```python
+>>> r.data = json.dumps({'a': 'b'})
+>>> r |should| have_json({'a': 'b'})
+>>> r |should| have_json({'b': 'c'})
+ShouldNotSatisfied: Expected response to have json:
+	{'b': 'c'}
+but got:
+	{u'a': u'b'}
+```
+
+This matcher will check the response.data attribute, but if used with
+flask-testing will use the request.json attribute instead.
+

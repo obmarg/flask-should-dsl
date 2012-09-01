@@ -1,7 +1,7 @@
-
 import flask_should_dsl
-from flask import Flask, abort, redirect
+from collections import namedtuple
 from unittest import TestCase
+from flask import Flask, abort, redirect, jsonify
 from should_dsl import should, should_not
 from should_dsl.dsl import ShouldNotSatisfied
 
@@ -10,14 +10,11 @@ app = Flask('Flask-Should-DSL-Test')
 # Keep pep8 happy
 flask_should_dsl
 have_status = None
-be_200 = None
-be_400 = None
-be_401 = None
-be_403 = None
-be_404 = None
-be_405 = None
-be_500 = None
+be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
 be_redirect_to = None
+have_json = None
+
+JSON_DATA = {'a': 'b', 'c': 'd'}
 
 
 @app.route('/ok')
@@ -38,6 +35,11 @@ def redir():
 @app.route('/redir2')
 def redir2():
     return redirect('/redir_target2')
+
+
+@app.route('/json')
+def json_route():
+    return jsonify(JSON_DATA)
 
 
 class BaseTest(TestCase):
@@ -114,3 +116,31 @@ class TestRedirects(BaseTest):
                 ShouldNotSatisfied,
                 lambda: response |should| be_redirect_to('/redir_target2')
                 )
+
+
+class TestHasJson(BaseTest):
+    def should_handle_expected_json(self):
+        response = self.app.get('/json')
+        response |should| have_json(JSON_DATA)
+        response |should_not| have_json({})
+        response |should_not| have_json({'e': 'f'})
+
+    def should_handle_unexpected_json(self):
+        response = self.app.get('/json')
+        self.assertRaises(
+                ShouldNotSatisfied,
+                lambda: response |should| have_json({})
+                )
+        self.assertRaises(
+                ShouldNotSatisfied,
+                lambda: response |should_not| have_json(JSON_DATA)
+                )
+
+    def should_use_json_attribute(self):
+        # Tests that the json attribute is used if it's there
+        # (for use with flask-testing or whatever)
+        fakeResponse = namedtuple('fakeResponse', ['json'])
+        response = fakeResponse(JSON_DATA)
+        response |should| have_json(JSON_DATA)
+        response |should_not| have_json({})
+        response |should_not| have_json({'e': 'f'})
