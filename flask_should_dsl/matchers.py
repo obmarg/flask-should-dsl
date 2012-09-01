@@ -1,3 +1,4 @@
+import json
 from should_dsl import matcher
 
 
@@ -87,5 +88,34 @@ class RedirectMatcher(object):
 
     def message_for_failed_should_not(self):
         return 'Did not expect a redirect to "{0}"'.format(
+                self._expected
+                )
+
+
+@matcher
+class JsonMatcher(object):
+    ''' A matcher to check for json responses '''
+    name = 'have_json'
+
+    def __call__(self, expected):
+        self._expected = expected
+        return self
+
+    def match(self, response):
+        try:
+            self._actual = response.json
+        except AttributeError:
+            self._actual = json.loads(response.data)
+        return self._actual == self._expected
+
+    def message_for_failed_should(self):
+        # TODO: Formatting on this could probably be better
+        return "Expected response to have json:\n\t{0}\nbut got:\n\t{1}".format(
+                self._expected, self._actual
+                )
+
+    def message_for_failed_should_not(self):
+        # TODO: Formatting on this could probably be better
+        return "Did not expect response to contain json:\n\t{0}".format(
                 self._expected
                 )
