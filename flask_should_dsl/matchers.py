@@ -26,14 +26,15 @@ class GenericStatusChecker(object):
         return 'Expected the status code not to be {0}'.format(self._expected)
 
 
-def make_status_checker(status):
+def make_status_checker(nameprefix, status):
     '''
     Gets a status checker class
-    :param status:  The status the checker should check for
-    :returns:       A class that will check for the status
+    :param nameprefix:  The name prefix to use
+    :param status:      The status the checker should check for
+    :returns:           A class that will check for the status
     '''
     class Checker(object):
-        name = 'be_{0}'.format(status)
+        name = '{0}_{1}'.format(nameprefix, status)
 
         def __call__(self):
             return self
@@ -55,7 +56,9 @@ def make_status_checker(status):
 # Make be_xxx matchers for all the status codes
 _status_codes = [200, 400, 401, 403, 404, 405, 500]
 for code in _status_codes:
-    matcher(make_status_checker(code))
+    matcher(make_status_checker('be', code))
+    matcher(make_status_checker('abort', code))
+    matcher(make_status_checker('raise', code))
 
 
 @matcher
