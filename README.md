@@ -104,6 +104,12 @@ but got:
 	{u'a': u'b'}
 ```
 
-This matcher will check the response.data attribute, but if used with
-flask-testing will use the request.json attribute instead.
+It's also possible to pass in keyword arguments to have_json, which will be
+converted into a dictionary before being compared to the json.
 
+```python
+>>> r |should| have_json(a='b')
+>>> r |should| have_json(b='c')
+ShouldNotSatisfied: Expected response to have json:
+	{'b': 'c'}
+```

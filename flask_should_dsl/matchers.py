@@ -97,8 +97,18 @@ class JsonMatcher(object):
     ''' A matcher to check for json responses '''
     name = 'have_json'
 
-    def __call__(self, expected):
-        self._expected = expected
+    def __call__(self, *pargs, **kwargs):
+        if len(pargs) > 1:
+            raise Exception('have_json only accepts one positional argument')
+        if len(kwargs) > 0:
+            if len(pargs) != 0:
+                raise Exception(
+                        "have_json can't accept positional arguments"
+                        "& keyword arguments"
+                        )
+            self._expected = dict(**kwargs)
+        else:
+            self._expected = pargs[0]
         return self
 
     def match(self, response):

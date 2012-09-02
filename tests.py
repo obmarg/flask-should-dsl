@@ -144,3 +144,22 @@ class TestHasJson(BaseTest):
         response |should| have_json(JSON_DATA)
         response |should_not| have_json({})
         response |should_not| have_json({'e': 'f'})
+
+    def should_accept_keyword_arguments(self):
+        response = self.app.get('/json')
+        response |should| have_json(**JSON_DATA)
+
+    def should_reject_multiple_pos_arguments(self):
+        response = self.app.get('/json')
+        self.assertRaises(
+                Exception,
+                lambda: response |should| have_json(1, 2)
+                )
+
+    def should_reject_pos_and_keyword_arguments(self):
+        response = self.app.get('/json')
+        self.assertRaises(
+                Exception,
+                lambda: response |should| have_json(2, arg='')
+                )
+
