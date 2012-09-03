@@ -75,16 +75,16 @@ ShouldNotSatisfied: Expected the status code not to be 200
 >>> app.get('/') |should_not| return_404
 ```
 
-##### be_redirect_to
+##### redirect_to
 
-This matcher checks if a response object represents a redirect.
+This matcher checks if a response contains a redirect to another page
 
 ```python
 >>> response.status_code = 301
 >>> response.location = 'http://localhost/redir'
->>> response |should| be_redirect_to('/redir')
+>>> response |should| redirect_to('/redir')
 >>> response.location = 'http://localhost/elsewhere'
->>> response |should| be_redirect_to('/redir')
+>>> response |should| redirect_to('/redir')
 Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected a redirect to "http://localhost/redir" but got "http://localhost/elsewhere"

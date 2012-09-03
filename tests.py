@@ -12,7 +12,7 @@ flask_should_dsl
 have_status = None
 be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
 abort_404 = abort_500 = return_404 = return_500 = None
-be_redirect_to = None
+redirect_to = None
 have_json = None
 
 JSON_DATA = {'a': 'b', 'c': 'd'}
@@ -104,26 +104,26 @@ class TestBeXxx(BaseTest):
 class TestRedirects(BaseTest):
     def should_handle_redirects(self):
         response = self.app.get('/redir')
-        response |should| be_redirect_to('/redir_target')
+        response |should| redirect_to('/redir_target')
         response = self.app.get('/redir2')
-        response |should_not| be_redirect_to('/redir_target')
+        response |should_not| redirect_to('/redir_target')
         response = self.app.get('/ok')
-        response |should_not| be_redirect_to('/redir_target')
+        response |should_not| redirect_to('/redir_target')
 
     def should_handle_no_redirect(self):
         response = self.app.get('/redir')
         self.assertRaises(
                 ShouldNotSatisfied,
-                lambda: response |should| be_redirect_to('/redir_target2')
+                lambda: response |should| redirect_to('/redir_target2')
                 )
         self.assertRaises(
                 ShouldNotSatisfied,
-                lambda: response |should_not| be_redirect_to('/redir_target')
+                lambda: response |should_not| redirect_to('/redir_target')
                 )
         response = self.app.get('/ok')
         self.assertRaises(
                 ShouldNotSatisfied,
-                lambda: response |should| be_redirect_to('/redir_target2')
+                lambda: response |should| redirect_to('/redir_target2')
                 )
 
 

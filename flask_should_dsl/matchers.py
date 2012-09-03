@@ -64,7 +64,7 @@ for code in _status_codes:
 @matcher
 class RedirectMatcher(object):
     ''' A matcher to check for redirects '''
-    name = 'be_redirect_to'
+    name = 'redirect_to'
 
     def __call__(self, location):
         self._expected = 'http://localhost' + location
