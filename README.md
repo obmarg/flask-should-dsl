@@ -57,11 +57,11 @@ Traceback (most recent call last):
 ShouldNotSatisfied: Expected the status code 400, but got 200
 ```
 
-##### be_xxx / abort_xxx / raise_xxx
+##### be_xxx / abort_xxx / return_xxx
 
 These matchers (be_200, be_400, be_401, be_403, be_404, be_405, be_500) provide
 shortcuts to check the status of a response object.  The matchers are avaliable
-with be, abort and raise prefixes, to allow for more readable code depending on
+with be, abort and return prefixes, to allow for more readable code depending on
 the circumstances
 
 ```python
@@ -72,7 +72,7 @@ Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected the status code not to be 200
 >>> app.get('/') |should_not| abort_500
->>> app.get('/') |should_not| raise_404
+>>> app.get('/') |should_not| return_404
 ```
 
 ##### be_redirect_to

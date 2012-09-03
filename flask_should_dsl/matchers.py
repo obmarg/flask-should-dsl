@@ -58,7 +58,7 @@ _status_codes = [200, 400, 401, 403, 404, 405, 500]
 for code in _status_codes:
     matcher(make_status_checker('be', code))
     matcher(make_status_checker('abort', code))
-    matcher(make_status_checker('raise', code))
+    matcher(make_status_checker('return', code))
 
 
 @matcher

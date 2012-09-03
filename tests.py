@@ -11,7 +11,7 @@ app = Flask('Flask-Should-DSL-Test')
 flask_should_dsl
 have_status = None
 be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
-abort_404 = abort_500 = raise_404 = raise_500 = None
+abort_404 = abort_500 = return_404 = return_500 = None
 be_redirect_to = None
 have_json = None
 
@@ -96,9 +96,9 @@ class TestBeXxx(BaseTest):
         self.app.get('/missing') |should| abort_404
         self.app.get('/ok') |should_not| abort_500
 
-    def should_have_raise_aliases(self):
-        self.app.get('/missing') |should| raise_404
-        self.app.get('/ok') |should_not| raise_500
+    def should_have_return_aliases(self):
+        self.app.get('/missing') |should| return_404
+        self.app.get('/ok') |should_not| return_500
 
 
 class TestRedirects(BaseTest):
