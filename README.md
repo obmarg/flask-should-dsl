@@ -10,7 +10,7 @@ easily along with the standard flask testing setup.
 
 ### Requirements
 - Python 2.6 or 2.7 (others may work, but these are all that's tested)
-- [Should-DSL 2.0a3](http://www.should-dsl.info/)
+- [Should-DSL](http://www.should-dsl.info/)
 - [Flask](http://flask.pocoo.org/)
 
 ### Installing
@@ -116,4 +116,17 @@ converted into a dictionary before being compared to the json.
 >>> r |should| have_json(b='c')
 ShouldNotSatisfied: Expected response to have json:
 	{'b': 'c'}
+```
+
+##### have_content_type
+
+This matcher checks if a response has it's content_type set to a certain value
+
+```python
+>>> r.content_type = 'text/html'
+>>> r |should| have_content_type('text/html')
+>>> r |should| have_content_type('application/json')
+ShouldNotSatisfied: Expected content type 'application/json', got 'text/html'
+>>> r |should_not| have_content_type('text/html')
+ShouldNotSatisfied: Expected content type to not be 'text/html'
 ```

@@ -132,3 +132,29 @@ class JsonMatcher(object):
         return "Did not expect response to contain json:\n\t{0}".format(
                 self._expected
                 )
+
+
+@matcher
+class ContentTypeMatcher(object):
+    ''' A matcher to check the content type '''
+    name = 'have_content_type'
+
+    def __call__(self, content_type):
+        self._expected = content_type
+        return self
+
+    def match(self, response):
+        # TODO: Would be good to support users passing in the full string
+        #       also....
+        self._actual = response.content_type.split(';')[0]
+        return self._actual == self._expected
+
+    def message_for_failed_should(self):
+        return "Expected content type '{0}', got '{1}'".format(
+            self._expected, self._actual
+            )
+
+    def message_for_failed_should_not(self):
+        return "Expected content type to not be '{0}'".format(self._expected)
+
+
