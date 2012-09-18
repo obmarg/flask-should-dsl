@@ -1,7 +1,7 @@
 import flask_should_dsl
 from collections import namedtuple
 from unittest import TestCase
-from flask import Flask, abort, redirect, jsonify
+from flask import Flask, abort, redirect, jsonify, make_response
 from should_dsl import should, should_not
 from should_dsl.dsl import ShouldNotSatisfied
 
@@ -13,7 +13,7 @@ have_status = None
 be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
 abort_404 = abort_500 = return_404 = return_500 = None
 redirect_to = None
-have_json = have_content_type = None
+have_json = have_content_type = have_header = None
 
 JSON_DATA = {'a': 'b', 'c': 'd'}
 
@@ -41,6 +41,13 @@ def redir2():
 @app.route('/json')
 def json_route():
     return jsonify(JSON_DATA)
+
+
+@app.route('/headers')
+def header_route():
+    response = make_response('')
+    response.headers['X-Wing'] = 'Awesome'
+    return response
 
 
 class BaseTest(TestCase):
@@ -222,3 +229,35 @@ class TestHaveContentType(BaseTest):
         response |should| have_content_type('text/html')
         response = self.app.get('/json')
         response |should| have_content_type('application/json')
+
+
+class TestHaveHeader(BaseTest):
+    def should_reject_too_many_arguments(self):
+        response = self.app.get('/headers')
+        self.assertRaises(
+            Exception,
+            lambda: response |should| have_header('x', 'y', 'z')
+            )
+        # Check too few while we're at it
+        self.assertRaises(
+            Exception,
+            lambda: response |should| have_header()
+            )
+
+    def should_handle_header_text_in_single_argument(self):
+        response = self.app.get('/headers')
+        response |should| have_header('X-Wing: Awesome')
+        response |should_not| have_header('X-Wing: Bad')
+        response |should_not| have_header('X-Something: Bad')
+
+    def should_check_header_presence(self):
+        response = self.app.get('/headers')
+        response |should| have_header('X-Wing')
+        response |should_not| have_header('X-Something')
+
+    def should_check_header_value(self):
+        response = self.app.get('/headers')
+        response |should| have_header('X-Wing', 'Awesome')
+        response |should_not| have_header('X-Wing', 'Bad')
+        response |should_not| have_header('X-Something', 'Bad')
+

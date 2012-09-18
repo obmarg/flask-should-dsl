@@ -180,3 +180,58 @@ class ContentTypeMatcher(object):
         return "Expected content type to not be '{0}'".format(self._expected)
 
 
+@matcher
+class HeaderMatcher(object):
+    ''' A matcher to check the headers returned '''
+    name = 'have_header'
+
+    def __call__(self, *pargs):
+        if len(pargs) == 1:
+            # One argument - this is either just the header name,
+            # or the full header text
+            expected = pargs[0].split(':')
+        elif len(pargs) == 2:
+            # Two arguments - should be header name & header value
+            expected = pargs
+        else:
+            raise Exception('has_header accepts one or two arguments')
+        self._expected_name = expected[0]
+        try:
+            self._expected_value = expected[1].strip()
+            self._check_value = True
+        except IndexError:
+            self._check_value = False
+        return self
+
+    def match(self, response):
+        self._value_found = None
+        for name, value in response.header_list:
+            if name == self._expected_name:
+                self._value_found = value
+                if not self._check_value:
+                    return True
+                elif value == self._expected_value:
+                    return True
+        return False
+
+    def message_for_failed_should(self):
+        if self._value_found:
+            # We did find a header with this name
+            return "Expected header '{0}' to be '{1}' not '{2}'".format(
+                self._expected_name, self._expected_value, self._value_found
+                )
+        return "Expected header '{0}' was not found".format(
+            self._expected_name
+            )
+
+    def message_for_failed_should_not(self):
+        if self._check_value:
+            return "Expected header '{0}' to not be '{1}'".format(
+                self._expected_name, self._expected_value
+                )
+        return "Expected header '{0}' to not exist".format(
+            self._expected_name
+            )
+
+
+

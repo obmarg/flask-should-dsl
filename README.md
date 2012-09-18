@@ -142,3 +142,18 @@ type & a subtype, then it will match on either.
 >>> r |should| have_content_type('text/*')
 >>> r |should| have_content_type('*/html')
 ```
+
+##### have_header
+
+This matcher checks if a response has a header, and optionally checks if that
+header is set to a certain value.
+
+```python
+>>> response |should| have_header('Content-Type')
+>>> response |should| have_header('Content-Type')
+>>> response |should_not| have_header('X-BadHeader')
+>>> response |should_not| have_header('X-BadHeader', 'Something')
+>>> response |should_not| have_header('X-BadHeader: Something')
+>>> response |should| have_header('Content-Length', '100')
+ShouldNotSatisfied: Expected header 'Content-Length' to be '100' not '0'
+```
