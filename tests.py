@@ -201,7 +201,16 @@ class TestHaveContentType(BaseTest):
             ShouldNotSatisfied,
             lambda: response |should_not| have_content_type('application/json')
             )
-        pass
+
+    def should_check_charset_if_requested(self):
+        response = self.FakeResponse('text/html; charset=utf-8')
+        response |should| have_content_type('text/html; charset=utf-8')
+        self.assertRaises(
+            ShouldNotSatisfied,
+            lambda: response |should| have_content_type(
+                'text/html; charset=utf-16'
+                )
+            )
 
     def should_handle_actual_response(self):
         # This one tests an actual response

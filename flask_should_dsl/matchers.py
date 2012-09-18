@@ -140,13 +140,14 @@ class ContentTypeMatcher(object):
     name = 'have_content_type'
 
     def __call__(self, content_type):
+        self._split = content_type.find(';') == -1
         self._expected = content_type
         return self
 
     def match(self, response):
-        # TODO: Would be good to support users passing in the full string
-        #       also....
-        self._actual = response.content_type.split(';')[0]
+        self._actual = response.content_type
+        if self._split:
+            self._actual = self._actual.split(';')[0]
         return self._actual == self._expected
 
     def message_for_failed_should(self):
