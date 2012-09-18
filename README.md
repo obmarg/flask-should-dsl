@@ -130,3 +130,14 @@ ShouldNotSatisfied: Expected content type 'application/json', got 'text/html'
 >>> r |should_not| have_content_type('text/html')
 ShouldNotSatisfied: Expected content type to not be 'text/html'
 ```
+
+This matcher also supports wildcard matches, and if you do not supply both a
+type & a subtype, then it will match on either.
+
+```python
+>>> r.content_type = 'text/html'
+>>> r |should| have_content_type('html')
+>>> r |should| have_content_type('text')
+>>> r |should| have_content_type('text/*')
+>>> r |should| have_content_type('*/html')
+```

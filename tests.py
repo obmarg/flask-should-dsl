@@ -212,6 +212,22 @@ class TestHaveContentType(BaseTest):
                 )
             )
 
+    def should_be_able_to_match_either(self):
+        response = self.app.get('/ok')
+        response |should| have_content_type('text')
+        response |should| have_content_type('html')
+        response |should_not| have_content_type('json')
+        response |should_not| have_content_type('application')
+
+    def should_accept_wildcards(self):
+        response = self.app.get('/ok')
+        response |should| have_content_type('text/*')
+        response |should| have_content_type('*/html')
+        response |should_not| have_content_type('application/*')
+        response |should_not| have_content_type('*/json')
+        response |should| have_content_type('*/*')
+        response |should| have_content_type('*')
+
     def should_handle_actual_response(self):
         # This one tests an actual response
         response = self.app.get('/ok')
