@@ -13,7 +13,7 @@ have_status = None
 be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
 abort_404 = abort_500 = return_404 = return_500 = None
 redirect_to = None
-have_json = None
+have_json = have_content_type = None
 
 JSON_DATA = {'a': 'b', 'c': 'd'}
 
@@ -127,7 +127,7 @@ class TestRedirects(BaseTest):
                 )
 
 
-class TestHasJson(BaseTest):
+class TestHaveJson(BaseTest):
     def should_handle_expected_json(self):
         response = self.app.get('/json')
         response |should| have_json(JSON_DATA)
@@ -172,3 +172,65 @@ class TestHasJson(BaseTest):
                 lambda: response |should| have_json(2, arg='')
                 )
 
+
+class TestHaveContentType(BaseTest):
+    FakeResponse = namedtuple('FakeResponse', ['content_type'])
+
+    def should_handle_plain_content_type_in_response(self):
+        # This tests a content_type without extra fields
+        response = self.FakeResponse('application/json')
+        response |should| have_content_type('application/json')
+        self.assertRaises(
+            ShouldNotSatisfied,
+            lambda: response |should| have_content_type('text/html')
+            )
+        self.assertRaises(
+            ShouldNotSatisfied,
+            lambda: response |should_not| have_content_type('application/json')
+            )
+
+    def should_ignore_charset_in_response(self):
+        # This tests several values seperated by ;
+        response = self.FakeResponse('application/json; charset=utf-8')
+        response |should| have_content_type('application/json')
+        self.assertRaises(
+            ShouldNotSatisfied,
+            lambda: response |should| have_content_type('text/html')
+            )
+        self.assertRaises(
+            ShouldNotSatisfied,
+            lambda: response |should_not| have_content_type('application/json')
+            )
+
+    def should_check_charset_if_requested(self):
+        response = self.FakeResponse('text/html; charset=utf-8')
+        response |should| have_content_type('text/html; charset=utf-8')
+        self.assertRaises(
+            ShouldNotSatisfied,
+            lambda: response |should| have_content_type(
+                'text/html; charset=utf-16'
+                )
+            )
+
+    def should_be_able_to_match_either(self):
+        response = self.app.get('/ok')
+        response |should| have_content_type('text')
+        response |should| have_content_type('html')
+        response |should_not| have_content_type('json')
+        response |should_not| have_content_type('application')
+
+    def should_accept_wildcards(self):
+        response = self.app.get('/ok')
+        response |should| have_content_type('text/*')
+        response |should| have_content_type('*/html')
+        response |should_not| have_content_type('application/*')
+        response |should_not| have_content_type('*/json')
+        response |should| have_content_type('*/*')
+        response |should| have_content_type('*')
+
+    def should_handle_actual_response(self):
+        # This one tests an actual response
+        response = self.app.get('/ok')
+        response |should| have_content_type('text/html')
+        response = self.app.get('/json')
+        response |should| have_content_type('application/json')
