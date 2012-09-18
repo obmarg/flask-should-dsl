@@ -9,19 +9,15 @@ This extension adds some basic matchers to should-dsl to allow it to be used
 easily along with the standard flask testing setup.
 
 ### Requirements
-- Python 2.6 or 2.7 (others may work, but these are all that's tested)
+- Python 2.6, 2.7 or PyPi (others may work, but these are all that's tested)
 - [Should-DSL](http://www.should-dsl.info/)
 - [Flask](http://flask.pocoo.org/)
 
 ### Installing
 
-Currently, flask-should-dsl needs to be installed from the github repository.
-I hope to add it to pypi at some point in the future, but currently I'm testing
-things to ensure they work. 
+The recommended way to instal flask is via `pip`:
 
-Assuming you have pip installed, the following command should work:
-
-    pip install git+git://github.com/obmarg/flask-should-dsl.git
+    pip install flask-should-dsl
 
 ### Contributing
 
