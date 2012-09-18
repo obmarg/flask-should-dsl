@@ -146,7 +146,6 @@ header is set to a certain value.
 
 ```python
 >>> response |should| have_header('Content-Type')
->>> response |should| have_header('Content-Type')
 >>> response |should_not| have_header('X-BadHeader')
 >>> response |should_not| have_header('X-BadHeader', 'Something')
 >>> response |should_not| have_header('X-BadHeader: Something')
