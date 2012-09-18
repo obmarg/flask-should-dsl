@@ -142,7 +142,7 @@ class ContentTypeMatcher(object):
     def __call__(self, content_type):
         # If there's a ; in the expected type we want to check
         # the whole thing.
-        self._split = content_type.find(';') == -1
+        self._mimetype = content_type.find(';') == -1
         # If there's no / we want to match either half of the
         # content-type
         self._match_either = content_type.find('/') == -1
@@ -154,11 +154,10 @@ class ContentTypeMatcher(object):
         return self
 
     def match(self, response):
-        self._actual = response.content_type
         if self._expected == '*':
             return True
-        if self._split:
-            self._actual = self._actual.split(';')[0]
+        if self._mimetype:
+            self._actual = response.mimetype
             sections = self._actual.split('/')
             if self._match_either:
                 return any(True for sec in sections if sec == self._expected)
@@ -168,6 +167,8 @@ class ContentTypeMatcher(object):
                     if actual != expected and expected != '*':
                         return False
                 return True
+        else:
+            self._actual = response.content_type
         return self._actual == self._expected
 
     def message_for_failed_should(self):

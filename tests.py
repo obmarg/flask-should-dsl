@@ -174,11 +174,12 @@ class TestHaveJson(BaseTest):
 
 
 class TestHaveContentType(BaseTest):
-    FakeResponse = namedtuple('FakeResponse', ['content_type'])
+    CTFakeResponse = namedtuple('CTFakeResponse', ['content_type'])
+    MTFakeResponse = namedtuple('MTFakeResponse', ['mimetype'])
 
-    def should_handle_plain_content_type_in_response(self):
+    def should_check_mime_type_by_default(self):
         # This tests a content_type without extra fields
-        response = self.FakeResponse('application/json')
+        response = self.MTFakeResponse('application/json')
         response |should| have_content_type('application/json')
         self.assertRaises(
             ShouldNotSatisfied,
@@ -189,21 +190,8 @@ class TestHaveContentType(BaseTest):
             lambda: response |should_not| have_content_type('application/json')
             )
 
-    def should_ignore_charset_in_response(self):
-        # This tests several values seperated by ;
-        response = self.FakeResponse('application/json; charset=utf-8')
-        response |should| have_content_type('application/json')
-        self.assertRaises(
-            ShouldNotSatisfied,
-            lambda: response |should| have_content_type('text/html')
-            )
-        self.assertRaises(
-            ShouldNotSatisfied,
-            lambda: response |should_not| have_content_type('application/json')
-            )
-
-    def should_check_charset_if_requested(self):
-        response = self.FakeResponse('text/html; charset=utf-8')
+    def should_check_content_type_if_requested(self):
+        response = self.CTFakeResponse('text/html; charset=utf-8')
         response |should| have_content_type('text/html; charset=utf-8')
         self.assertRaises(
             ShouldNotSatisfied,
