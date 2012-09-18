@@ -89,6 +89,7 @@ Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected a redirect to "http://localhost/redir" but got "http://localhost/elsewhere"
 >>> response.status_code = 200
+>>> response |should| redirect_to('/redir')
 Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected a redirect status, but got 200
