@@ -13,10 +13,9 @@ information
 
 from setuptools import setup
 
-
 setup(
     name='Flask-Should-DSL',
-    version='0.1',
+    version='0.2',
     url='http://github.com/obmarg/flask-should-dsl',
     license='BSD',
     author='Graeme Coupar',
@@ -40,7 +39,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Software Development :: Testing'
     ]
 )
