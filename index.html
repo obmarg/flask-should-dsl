@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Flask Should-DSL by obmarg</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/obmarg/flask-should-dsl">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/obmarg/flask-should-dsl/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/obmarg/flask-should-dsl/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Flask Should-DSL</h1>
+          <p>A flask extension for testing with should-dsl</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/obmarg">obmarg</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <p>This extension adds some basic matchers to should-dsl to allow it to be used
+easily along with the standard flask testing setup.</p>
+
+<h3>Requirements</h3>
+
+<ul>
+<li>Python 2.6, 2.7 or PyPi (others may work, but these are all that's tested)</li>
+<li><a href="http://www.should-dsl.info/">Should-DSL</a></li>
+<li><a href="http://flask.pocoo.org/">Flask</a></li>
+</ul><h3>Installing</h3>
+
+<p>The recommended way to instal flask is via <code>pip</code>:</p>
+
+<pre><code>pip install flask-should-dsl
+</code></pre>
+
+<h3>Contributing</h3>
+
+<p>To contribute to flask-should-dsl:</p>
+
+<ul>
+<li>Create a fork of the repository on github</li>
+<li>Create a feature branch off the develop branch</li>
+<li>Do work</li>
+<li>When you're ready to contribute, create a pull request on github.</li>
+</ul><h2>Usage</h2>
+
+<p>To enable the flask-should-dsl matchers, simply import the module:</p>
+
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">flask.ext.should_dsl</span>
+</pre></div>
+
+<h3>Matchers</h3>
+
+<p>The following matchers are provided by flask-should-dsl:</p>
+
+<h5>have_status</h5>
+
+<p>This checks the status of a response object</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_status</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_status</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">the</span> <span class="n">status</span> <span class="n">code</span> <span class="mi">400</span><span class="p">,</span> <span class="n">but</span> <span class="n">got</span> <span class="mi">200</span>
+</pre></div>
+
+<h5>be_xxx / abort_xxx / return_xxx</h5>
+
+<p>These matchers (be_200, be_400, be_401, be_403, be_404, be_405, be_500) provide
+shortcuts to check the status of a response object.  The matchers are avaliable
+with be, abort and return prefixes, to allow for more readable code depending on
+the circumstances</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">be_200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">resp</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">be_200</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">the</span> <span class="n">status</span> <span class="n">code</span> <span class="ow">not</span> <span class="n">to</span> <span class="n">be</span> <span class="mi">200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">abort_500</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">return_404</span>
+</pre></div>
+
+<h5>redirect_to</h5>
+
+<p>This matcher checks if a response contains a redirect to another page</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">301</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">'http://localhost/redir'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">redirect_to</span><span class="p">(</span><span class="s">'/redir'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">'http://localhost/elsewhere'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">redirect_to</span><span class="p">(</span><span class="s">'/redir'</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">a</span> <span class="n">redirect</span> <span class="n">to</span> <span class="s">"http://localhost/redir"</span> <span class="n">but</span> <span class="n">got</span> <span class="s">"http://localhost/elsewhere"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">redirect_to</span><span class="p">(</span><span class="s">'/redir'</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="o">...</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">a</span> <span class="n">redirect</span> <span class="n">status</span><span class="p">,</span> <span class="n">but</span> <span class="n">got</span> <span class="mi">200</span>
+</pre></div>
+
+<h5>have_json</h5>
+
+<p>This matcher checks if a response object contains matching JSON.  </p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s">'a'</span><span class="p">:</span> <span class="s">'b'</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_json</span><span class="p">({</span><span class="s">'a'</span><span class="p">:</span> <span class="s">'b'</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_json</span><span class="p">({</span><span class="s">'b'</span><span class="p">:</span> <span class="s">'c'</span><span class="p">})</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">response</span> <span class="n">to</span> <span class="n">have</span> <span class="n">json</span><span class="p">:</span>
+    <span class="p">{</span><span class="s">'b'</span><span class="p">:</span> <span class="s">'c'</span><span class="p">}</span>
+<span class="n">but</span> <span class="n">got</span><span class="p">:</span>
+    <span class="p">{</span><span class="s">u'a'</span><span class="p">:</span> <span class="s">u'b'</span><span class="p">}</span>
+</pre></div>
+
+<p>It's also possible to pass in keyword arguments to have_json, which will be
+converted into a dictionary before being compared to the json.</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_json</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="s">'b'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_json</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="s">'c'</span><span class="p">)</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">response</span> <span class="n">to</span> <span class="n">have</span> <span class="n">json</span><span class="p">:</span>
+    <span class="p">{</span><span class="s">'b'</span><span class="p">:</span> <span class="s">'c'</span><span class="p">}</span>
+</pre></div>
+
+<h5>have_content_type</h5>
+
+<p>This matcher checks if a response has it's content_type set to a certain value</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="s">'text/html'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'text/html'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'application/json'</span><span class="p">)</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">content</span> <span class="nb">type</span> <span class="s">'application/json'</span><span class="p">,</span> <span class="n">got</span> <span class="s">'text/html'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'text/html'</span><span class="p">)</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">content</span> <span class="nb">type</span> <span class="n">to</span> <span class="ow">not</span> <span class="n">be</span> <span class="s">'text/html'</span>
+</pre></div>
+
+<p>This matcher also supports wildcard matches, and if you do not supply both a
+type &amp; a subtype, then it will match on either.</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="s">'text/html'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'html'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'text'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'text/*'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">r</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_content_type</span><span class="p">(</span><span class="s">'*/html'</span><span class="p">)</span>
+</pre></div>
+
+<h5>have_header</h5>
+
+<p>This matcher checks if a response has a header, and optionally checks if that
+header is set to a certain value.</p>
+
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_header</span><span class="p">(</span><span class="s">'Content-Type'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_header</span><span class="p">(</span><span class="s">'Content-Type'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">have_header</span><span class="p">(</span><span class="s">'X-BadHeader'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">have_header</span><span class="p">(</span><span class="s">'X-BadHeader'</span><span class="p">,</span> <span class="s">'Something'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should_not</span><span class="o">|</span> <span class="n">have_header</span><span class="p">(</span><span class="s">'X-BadHeader: Something'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">|</span><span class="n">should</span><span class="o">|</span> <span class="n">have_header</span><span class="p">(</span><span class="s">'Content-Length'</span><span class="p">,</span> <span class="s">'100'</span><span class="p">)</span>
+<span class="n">ShouldNotSatisfied</span><span class="p">:</span> <span class="n">Expected</span> <span class="n">header</span> <span class="s">'Content-Length'</span> <span class="n">to</span> <span class="n">be</span> <span class="s">'100'</span> <span class="ow">not</span> <span class="s">'0'</span>
+</pre></div>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
