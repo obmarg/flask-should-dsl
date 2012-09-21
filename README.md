@@ -15,7 +15,7 @@ easily along with the standard flask testing setup.
 
 ### Installing
 
-The recommended way to instal flask is via `pip`:
+The recommended way to install flask is via `pip`:
 
     pip install flask-should-dsl
 

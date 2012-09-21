@@ -7,8 +7,8 @@ A flask extension for testing with should-dsl.
 This extension adds some basic matchers to should-dsl to allow it to be used
 easily along with the standard flask testing setup.
 
-See the Readme at http://github.com/obmarg/flask-should-dsl for more
-information
+See the Readme at http://github.com/obmarg/flask-should-dsl or the website at
+http://obmarg.github.com/flask-should-dsl/ for more information
 """
 
 from setuptools import setup
@@ -16,7 +16,7 @@ from setuptools import setup
 setup(
     name='Flask-Should-DSL',
     version='0.2',
-    url='http://github.com/obmarg/flask-should-dsl',
+    url='http://obmarg.github.com/flask-should-dsl/',
     license='BSD',
     author='Graeme Coupar',
     author_email='grambo@grambo.me.uk',
