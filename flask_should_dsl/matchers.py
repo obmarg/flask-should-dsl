@@ -234,4 +234,26 @@ class HeaderMatcher(object):
             )
 
 
+@matcher
+class ContentMatcher(object):
+    ''' A matcher to check if a response has some content '''
+    name = 'have_content'
 
+    def __call__(self, content):
+        self._expected = content
+        return self
+
+    def match(self, response):
+        self._actual = response.data
+        return self._actual == self._expected
+
+    def message_for_failed_should(self):
+        # TODO: This message could be better.
+        #       An optional diff might be nice if we've got longer
+        #       data
+        return "Expected content '{0}' but got '{1}'".format(
+            self._expected, self._actual
+            )
+
+    def message_for_failed_should_not(self):
+        return "Expected content not to be '{0}'".format(self._expected)

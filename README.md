@@ -156,3 +156,14 @@ header is set to a certain value.
 >>> response |should| have_header('Content-Length', '100')
 ShouldNotSatisfied: Expected header 'Content-Length' to be '100' not '0'
 ```
+
+##### have_content
+
+This matcher checks if a response contains certain content.
+
+```python
+>>> response = app.get('/hello')
+>>> response |should| have_content('hello')
+>>> response |should_not| have_content('hello')
+ShouldNotSatisfied: Expected content not to be 'hello'
+```
