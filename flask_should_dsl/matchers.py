@@ -128,6 +128,7 @@ class JsonMatcher(object):
 
     def message_for_failed_should(self):
         # TODO: Formatting on this could probably be better
+        #       Thinking a diff option might be good for this one too
         return "Expected response to have json:\n\t{0}\nbut got:\n\t{1}".format(
                 self._expected, self._actual
                 )
@@ -253,12 +254,31 @@ class ContentMatcher(object):
         return self._actual == self._expected
 
     def message_for_failed_should(self):
-        # TODO: This message could be better.
-        #       An optional diff might be nice if we've got longer
+        # TODO: An optional diff might be nice if we've got longer
         #       data
-        return "Expected content '{0}' but got '{1}'".format(
-            self._expected, self._actual
-            )
+        if self._multiline:
+            message = "Expected content:\n{0}\n\nBut got:\n{1}"
+        else:
+            message = "Expected content '{0}' but got '{1}'"
+        return message.format(self._expected, self._actual)
 
     def message_for_failed_should_not(self):
-        return "Expected content not to be '{0}'".format(self._expected)
+        if self._multiline:
+            message = "Expected content not to be:\n{0}"
+        else:
+            message = "Expected content not to be '{0}'"
+        return message.format(self._expected)
+
+    @property
+    def _multiline(self):
+        '''
+        Property that checks if _expected or _actual is likely to take up
+        more than one line
+        '''
+        for string in [self._expected, self._actual]:
+            if len(string) > 80 or string.find('\n') != -1:
+                return True
+        return False
+
+# TODO: Add contain_content matcher, since have_content is a bit OTT if we just
+# want to check what is in the content matcher
