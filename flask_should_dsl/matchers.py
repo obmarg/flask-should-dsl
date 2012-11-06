@@ -41,12 +41,17 @@ def make_status_checker(nameprefix, status):
 
         def match(self, response):
             self._actual = response.status_code
+            self._response_data = response.data
             return self._actual == status
 
         def message_for_failed_should(self):
-            return 'Expected the status code {0}, but got {1}'.format(
-                    status, self._actual
-                    )
+            message = 'Expected the status code {0}, but got {1}.'.format(
+                      status, self._actual
+                      )
+            if self._response_data:
+                response = 'Response Data:\n"{0}"'.format(self._response_data)
+                message = '\n'.join([message, response])
+            return message
 
         def message_for_failed_should_not(self):
             return 'Expected the status code not to be {0}'.format(status)
