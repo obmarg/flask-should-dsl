@@ -14,6 +14,7 @@ be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
 abort_404 = abort_500 = return_404 = return_500 = None
 redirect_to = None
 have_content = have_json = have_content_type = have_header = None
+have_content = None
 
 JSON_DATA = {'a': 'b', 'c': 'd'}
 
@@ -268,13 +269,14 @@ class TestHaveHeader(BaseTest):
 
 
 class TestHaveContent(BaseTest):
-    def should_handle_success(self):
+    def should_handle_non_find_success(self):
         response = self.app.get('/hello')
         response |should| have_content('hello')
         response |should_not| have_content('bye')
 
-    def should_handle_failure(self):
+    def should_handle_non_find_failure(self):
         response = self.app.get('/hello')
+        # TODO: would be good to test the error messages from these
         self.assertRaises(
                 ShouldNotSatisfied,
                 lambda: response |should| have_content('bye')
@@ -282,4 +284,22 @@ class TestHaveContent(BaseTest):
         self.assertRaises(
                 ShouldNotSatisfied,
                 lambda: response |should_not| have_content('hello')
+                )
+
+    def should_handle_find_success(self):
+        response = self.app.get('/hello')
+        response |should| have_content('hell', find=True)
+        response |should| have_content('hello', find=True)
+        response |should_not| have_content('oreo', find=True)
+
+    def should_handle_find_failure(self):
+        response = self.app.get('/hello')
+        # TODO: would be good to test the error messages from these
+        self.assertRaises(
+                ShouldNotSatisfied,
+                lambda: response |should| have_content('hello man', find=True)
+                )
+        self.assertRaises(
+                ShouldNotSatisfied,
+                lambda: response |should_not| have_content('ello', find=True)
                 )

@@ -159,11 +159,17 @@ ShouldNotSatisfied: Expected header 'Content-Length' to be '100' not '0'
 
 ##### have_content
 
-This matcher checks if a response contains certain content.
+This matcher checks if a response contains certain content.  By default, it
+expects the content to exactly match the input, but this can be overridden
+with the `find` option.
 
 ```python
 >>> response = app.get('/hello')
 >>> response |should| have_content('hello')
 >>> response |should_not| have_content('hello')
 ShouldNotSatisfied: Expected content not to be 'hello'
+>>> response |should| have_content('ello', find=True)
+>>> response |should| have_content('hell', find=True)
+>>> response |should| have_content('bye', find=True)
+ShouldNotSatisfied: Expected to find 'bye' in 'hello'
 ```
