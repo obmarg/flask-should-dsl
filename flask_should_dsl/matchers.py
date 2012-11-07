@@ -41,12 +41,17 @@ def make_status_checker(nameprefix, status):
 
         def match(self, response):
             self._actual = response.status_code
+            self._response_data = response.data
             return self._actual == status
 
         def message_for_failed_should(self):
-            return 'Expected the status code {0}, but got {1}'.format(
-                    status, self._actual
-                    )
+            message = 'Expected the status code {0}, but got {1}.'.format(
+                      status, self._actual
+                      )
+            if self._response_data:
+                response = 'Response Data:\n"{0}"'.format(self._response_data)
+                message = '\n'.join([message, response])
+            return message
 
         def message_for_failed_should_not(self):
             return 'Expected the status code not to be {0}'.format(status)
@@ -123,6 +128,7 @@ class JsonMatcher(object):
 
     def message_for_failed_should(self):
         # TODO: Formatting on this could probably be better
+        #       Thinking a diff option might be good for this one too
         return "Expected response to have json:\n\t{0}\nbut got:\n\t{1}".format(
                 self._expected, self._actual
                 )
@@ -234,4 +240,60 @@ class HeaderMatcher(object):
             )
 
 
+@matcher
+class ContentMatcher(object):
+    ''' A matcher to check if a response has some content '''
+    name = 'have_content'
 
+    def __call__(self, content, find=False):
+        self._expected = content
+        self._find = find
+        return self
+
+    def match(self, response):
+        self._actual = response.data
+        if self._find:
+            return self._actual.find(self._expected) != -1
+        else:
+            return self._actual == self._expected
+
+    def message_for_failed_should(self):
+        # TODO: An optional diff might be nice if we've got longer
+        #       data.
+        if self._find:
+            if self._multiline:
+                message = "Expected to find:\n{0}\n\nContained within:\n{1}"
+            else:
+                message = "Expected to find '{0}' in '{1}'"
+        else:
+            if self._multiline:
+                message = "Expected content:\n{0}\n\nBut got:\n{1}"
+            else:
+                message = "Expected content '{0}' but got '{1}'"
+        return message.format(self._expected, self._actual)
+
+    def message_for_failed_should_not(self):
+        if self._find:
+            if self._multiline:
+                message = "Did not expect to find:\n{0}\n\n" + \
+                          "Contained within:\n{1}"
+            else:
+                message = "Did not expect to find '{0}' in '{1}'"
+            return message.format(self._expected, self._actual)
+        else:
+            if self._multiline:
+                message = "Expected content not to be:\n{0}"
+            else:
+                message = "Expected content not to be '{0}'"
+            return message.format(self._expected)
+
+    @property
+    def _multiline(self):
+        '''
+        Property that checks if _expected or _actual is likely to take up
+        more than one line
+        '''
+        for string in [self._expected, self._actual]:
+            if len(string) > 80 or string.find('\n') != -1:
+                return True
+        return False

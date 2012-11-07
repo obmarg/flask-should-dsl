@@ -15,7 +15,7 @@ easily along with the standard flask testing setup.
 
 ### Installing
 
-The recommended way to instal flask is via `pip`:
+The recommended way to install flask is via `pip`:
 
     pip install flask-should-dsl
 
@@ -38,6 +38,9 @@ import flask.ext.should_dsl
 
 ### Matchers
 
+The matchers provided by flask-should-dsl are intended to be used with the
+response objects that are returned by the flask test client.
+
 The following matchers are provided by flask-should-dsl:
 
 ##### have_status
@@ -45,9 +48,9 @@ The following matchers are provided by flask-should-dsl:
 This checks the status of a response object
 
 ```python
->>> resp.status_code = 200
->>> resp |should| have_status(200)
->>> resp |should| have_status(400)
+>>> response = app.get('/ok')
+>>> response |should| have_status(200)
+>>> response |should| have_status(400)
 Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected the status code 400, but got 200
@@ -61,9 +64,9 @@ with be, abort and return prefixes, to allow for more readable code depending on
 the circumstances
 
 ```python
->>> resp.status_code = 200
->>> resp |should| be_200
->>> resp |should_not| be_200
+>>> response = app.get('/ok')
+>>> response |should| be_200
+>>> response |should_not| be_200
 Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected the status code not to be 200
@@ -76,7 +79,7 @@ ShouldNotSatisfied: Expected the status code not to be 200
 This matcher checks if a response contains a redirect to another page
 
 ```python
->>> response.status_code = 301
+>>> response = app.get('/redirect')
 >>> response.location = 'http://localhost/redir'
 >>> response |should| redirect_to('/redir')
 >>> response.location = 'http://localhost/elsewhere'
@@ -84,7 +87,7 @@ This matcher checks if a response contains a redirect to another page
 Traceback (most recent call last):
 ...
 ShouldNotSatisfied: Expected a redirect to "http://localhost/redir" but got "http://localhost/elsewhere"
->>> response.status_code = 200
+>>> response = app.get('/ok')
 >>> response |should| redirect_to('/redir')
 Traceback (most recent call last):
 ...
@@ -96,9 +99,9 @@ ShouldNotSatisfied: Expected a redirect status, but got 200
 This matcher checks if a response object contains matching JSON.  
 
 ```python
->>> r.data = json.dumps({'a': 'b'})
->>> r |should| have_json({'a': 'b'})
->>> r |should| have_json({'b': 'c'})
+>>> response = app.get('/json')
+>>> response |should| have_json({'a': 'b'})
+>>> response |should| have_json({'b': 'c'})
 ShouldNotSatisfied: Expected response to have json:
 	{'b': 'c'}
 but got:
@@ -109,8 +112,8 @@ It's also possible to pass in keyword arguments to have_json, which will be
 converted into a dictionary before being compared to the json.
 
 ```python
->>> r |should| have_json(a='b')
->>> r |should| have_json(b='c')
+>>> response |should| have_json(a='b')
+>>> response |should| have_json(b='c')
 ShouldNotSatisfied: Expected response to have json:
 	{'b': 'c'}
 ```
@@ -120,9 +123,9 @@ ShouldNotSatisfied: Expected response to have json:
 This matcher checks if a response has it's content_type set to a certain value
 
 ```python
->>> r.content_type = 'text/html'
->>> r |should| have_content_type('text/html')
->>> r |should| have_content_type('application/json')
+>>> response = app.get('/ok')
+>>> response |should| have_content_type('text/html')
+>>> response |should| have_content_type('application/json')
 ShouldNotSatisfied: Expected content type 'application/json', got 'text/html'
 >>> r |should_not| have_content_type('text/html')
 ShouldNotSatisfied: Expected content type to not be 'text/html'
@@ -132,11 +135,11 @@ This matcher also supports wildcard matches, and if you do not supply both a
 type & a subtype, then it will match on either.
 
 ```python
->>> r.content_type = 'text/html'
->>> r |should| have_content_type('html')
->>> r |should| have_content_type('text')
->>> r |should| have_content_type('text/*')
->>> r |should| have_content_type('*/html')
+>>> response = app.get('/ok')
+>>> response |should| have_content_type('html')
+>>> response |should| have_content_type('text')
+>>> response |should| have_content_type('text/*')
+>>> response |should| have_content_type('*/html')
 ```
 
 ##### have_header
@@ -145,11 +148,28 @@ This matcher checks if a response has a header, and optionally checks if that
 header is set to a certain value.
 
 ```python
->>> response |should| have_header('Content-Type')
+>>> response = app.get('/ok')
 >>> response |should| have_header('Content-Type')
 >>> response |should_not| have_header('X-BadHeader')
 >>> response |should_not| have_header('X-BadHeader', 'Something')
 >>> response |should_not| have_header('X-BadHeader: Something')
 >>> response |should| have_header('Content-Length', '100')
 ShouldNotSatisfied: Expected header 'Content-Length' to be '100' not '0'
+```
+
+##### have_content
+
+This matcher checks if a response contains certain content.  By default, it
+expects the content to exactly match the input, but this can be overridden
+with the `find` option.
+
+```python
+>>> response = app.get('/hello')
+>>> response |should| have_content('hello')
+>>> response |should_not| have_content('hello')
+ShouldNotSatisfied: Expected content not to be 'hello'
+>>> response |should| have_content('ello', find=True)
+>>> response |should| have_content('hell', find=True)
+>>> response |should| have_content('bye', find=True)
+ShouldNotSatisfied: Expected to find 'bye' in 'hello'
 ```
