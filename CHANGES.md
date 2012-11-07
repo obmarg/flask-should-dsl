@@ -1,8 +1,16 @@
+### 0.3:
+
+(7 November 2012)
+
+* Added have_content matcher
+* be_XXX matchers now output the request body
+* Some README updates
+
 ### 0.2:
 
 (19 September 2012)
 
-* Added has_json matcher
+* Added have_json matcher
 * Added abort_xxx and return_xxx aliases for be_xxx
 * Renamed be_redirect_to matcher to redirect_to
 * Added PyPi to officially tested python versions

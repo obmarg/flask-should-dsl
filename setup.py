@@ -15,7 +15,7 @@ from setuptools import setup
 
 setup(
     name='Flask-Should-DSL',
-    version='0.2',
+    version='0.3',
     url='http://obmarg.github.com/flask-should-dsl/',
     license='BSD',
     author='Graeme Coupar',
