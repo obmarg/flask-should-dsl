@@ -1,6 +1,7 @@
 import json
 from should_dsl import matcher
 
+from werkzeug.http import HTTP_STATUS_CODES
 
 @matcher
 class GenericStatusChecker(object):
@@ -59,7 +60,7 @@ def make_status_checker(nameprefix, status):
 
 
 # Make be_xxx matchers for all the status codes
-_status_codes = [200, 400, 401, 403, 404, 405, 500]
+_status_codes = HTTP_STATUS_CODES.keys()
 for code in _status_codes:
     matcher(make_status_checker('be', code))
     matcher(make_status_checker('abort', code))

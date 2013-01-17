@@ -1,3 +1,9 @@
+### 0.4:
+
+(17 January 2013)
+
+* Added be_XXX matchers for each status code supported by Werkzeug
+
 ### 0.3:
 
 (7 November 2012)

@@ -10,7 +10,7 @@ app = Flask('Flask-Should-DSL-Test')
 # Keep pep8 happy
 flask_should_dsl
 have_status = None
-be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = None
+be_200 = be_400 = be_401 = be_403 = be_404 = be_405 = be_500 = be_507 = None
 abort_404 = abort_500 = return_404 = return_500 = None
 redirect_to = None
 have_content = have_json = have_content_type = have_header = None
@@ -93,6 +93,7 @@ class TestBeXxx(BaseTest):
         response = self.app.get('/missing')
         response |should| be_404
         response |should_not| be_500
+        response |should_not| be_507
 
     def should_handle_failure(self):
         response = self.app.get('/ok')

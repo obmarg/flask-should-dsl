@@ -58,10 +58,12 @@ ShouldNotSatisfied: Expected the status code 400, but got 200
 
 ##### be_xxx / abort_xxx / return_xxx
 
-These matchers (be_200, be_400, be_401, be_403, be_404, be_405, be_500) provide
-shortcuts to check the status of a response object.  The matchers are avaliable
-with be, abort and return prefixes, to allow for more readable code depending on
-the circumstances
+These matchers (be_200, be_404, be_500 etc.) provide shortcuts to check the
+status of a response object.  The matchers are avaliable with be, abort and
+return prefixes, to allow for more readable code depending on the
+circumstances.  There should be matchers for each status code supported by
+werkzeug. If you need a status code that is unsupported, the `have_status`
+matcher may be used (or alternatively, file a bug and I'll add support for it)
 
 ```python
 >>> response = app.get('/ok')
