@@ -1,3 +1,9 @@
+### 0.5:
+
+(26 April 2014)
+
+* Fixed silly typo in setup.py
+
 ### 0.4:
 
 (17 January 2013)
